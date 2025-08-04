@@ -1,6 +1,6 @@
 {
   "name": "@pv-hamed/configs",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MIT",
   "author": "Hamed Jafari <hamedjix@gmail.com>",
   "description": "Pointsville's ESLint configuration",
