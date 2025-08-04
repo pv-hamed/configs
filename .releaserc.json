@@ -7,10 +7,23 @@
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
     [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
       "@semantic-release/npm",
       {
         "npmPublish": true,
         "tarballDir": "dist"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["package.json", "CHANGELOG.md"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ],
     [
@@ -24,5 +37,7 @@
         ]
       }
     ]
-  ]
+  ],
+  "tagFormat": "v${version}",
+  "repositoryUrl": "https://github.com/pv-hamed/configs.git"
 }
