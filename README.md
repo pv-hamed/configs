@@ -1,4 +1,4 @@
-# @coinsigma/eslint-config-react
+# @jix/configs
 
 A comprehensive ESLint configuration for CoinSigma React applications using ESLint v9 flat config.
 
@@ -15,7 +15,7 @@ A comprehensive ESLint configuration for CoinSigma React applications using ESLi
 ## Installation
 
 ```bash
-pnpm add -D @coinsigma/eslint-config-react eslint
+pnpm add -D @jix/configs eslint
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ pnpm add -D @coinsigma/eslint-config-react eslint
 Create an `eslint.config.js` file in your project root:
 
 ```javascript
-import coinSigmaConfig from '@coinsigma/eslint-config-react';
+import coinSigmaConfig from "@jix/configs";
 
 export default coinSigmaConfig;
 ```
@@ -31,38 +31,39 @@ export default coinSigmaConfig;
 ### With custom overrides
 
 ```javascript
-import coinSigmaConfig from '@coinsigma/eslint-config-react';
+import coinSigmaConfig from "@jix/configs";
 
 export default [
   ...coinSigmaConfig,
   {
     // Your custom rules
     rules: {
-      'no-console': 'off'
-    }
-  }
+      "no-console": "off",
+    },
+  },
 ];
 ```
 
 ### For specific file patterns
 
 ```javascript
-import coinSigmaConfig from '@coinsigma/eslint-config-react';
+import coinSigmaConfig from "@jix/configs";
 
 export default [
   ...coinSigmaConfig,
   {
-    files: ['src/components/**/*.tsx'],
+    files: ["src/components/**/*.tsx"],
     rules: {
       // Component-specific rules
-    }
-  }
+    },
+  },
 ];
 ```
 
 ## What's included
 
 ### Base configurations
+
 - ESLint recommended rules
 - React recommended rules
 - React Hooks rules
@@ -71,6 +72,7 @@ export default [
 - Import/export organization rules
 
 ### Key rules
+
 - **React**: Modern React patterns (no React import needed)
 - **TypeScript**: Strict type checking with sensible defaults
 - **Accessibility**: WCAG compliance helpers
@@ -98,7 +100,7 @@ For the best experience, install the ESLint extension and add this to your VS Co
 
 ## Contributing
 
-This package is maintained by the CoinSigma team. For issues or feature requests, please open an issue in the repository.
+This package is maintained by the Jix team. For issues or feature requests, please open an issue in the repository.
 
 ## License
 
