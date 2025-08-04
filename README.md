@@ -98,6 +98,31 @@ For the best experience, install the ESLint extension and add this to your VS Co
 }
 ```
 
+## Development Workflow
+
+This package uses automated CI/CD for releases:
+
+### 🚀 Automated Publishing
+- **Push to main** → Automatic version bump & publish
+- **Version bumping** based on commit message conventions
+- **Automatic releases** with changelog generation
+
+### 📝 Commit Convention
+Use conventional commit messages for automatic versioning:
+
+```bash
+# Major version (breaking changes)
+git commit -m "feat!: restructure config exports"
+
+# Minor version (new features)
+git commit -m "feat: add new accessibility rules"
+
+# Patch version (fixes & improvements)
+git commit -m "fix: resolve TypeScript compilation issue"
+```
+
+See [Commit Convention Guide](.github/COMMIT_CONVENTION.md) for details.
+
 ## Contributing
 
 This package is maintained by the Jix team. For issues or feature requests, please open an issue in the repository.

@@ -1,0 +1,155 @@
+name: CI/CD - Auto Release & Publish
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Test and Build Job
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        run: pnpm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  # Auto Release and Publish Job (only on main branch pushes)
+  auto-release:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@pv-hamed"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Determine version bump
+        id: version
+        run: |
+          # Get the last commit message
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+
+          # Determine version bump based on commit message
+          if [[ $COMMIT_MSG == *"BREAKING CHANGE"* ]] || [[ $COMMIT_MSG == *"feat!"* ]] || [[ $COMMIT_MSG == *"fix!"* ]]; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+          elif [[ $COMMIT_MSG == feat* ]]; then
+            echo "bump=minor" >> $GITHUB_OUTPUT
+          elif [[ $COMMIT_MSG == fix* ]] || [[ $COMMIT_MSG == patch* ]]; then
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        id: bump
+        run: |
+          # Get current version
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+
+          # Bump version
+          npm version ${{ steps.version.outputs.bump }} --no-git-tag-version
+
+          # Get new version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Commit version bump
+        run: |
+          git add package.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new_version }} [skip ci]"
+          git tag ${{ steps.bump.outputs.tag }}
+          git push origin main
+          git push origin ${{ steps.bump.outputs.tag }}
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          release_name: ${{ steps.bump.outputs.tag }}
+          body: |
+            ## Changes in ${{ steps.bump.outputs.tag }}
+
+            **Version:** ${{ steps.bump.outputs.current_version }} → ${{ steps.bump.outputs.new_version }}
+            **Type:** ${{ steps.version.outputs.bump }} release
+
+            ### Recent Commits
+            ${{ github.event.head_commit.message }}
+
+            ---
+
+            ### 📦 Installation
+            ```bash
+            pnpm add -D @pv-hamed/configs eslint
+            ```
+
+            ### 🚀 Usage
+            ```javascript
+            import config from '@pv-hamed/configs';
+            export default config;
+            ```
+          draft: false
+          prerelease: false
+
+      - name: Publish to GitHub Packages
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
