@@ -1,3 +1,14 @@
+<div align="center">
+
+![logo](https://raw.githubusercontent.com/pv-hamed/configs/master/assets/pv_banner.png)
+
+<br/>
+
+![download status][download-badge]
+![version][version-badge]
+![MIT License][license-badge]
+
+</div>
 # @jix/configs
 
 A comprehensive ESLint configuration for CoinSigma React applications using ESLint v9 flat config.
@@ -103,11 +114,13 @@ For the best experience, install the ESLint extension and add this to your VS Co
 This package uses automated CI/CD for releases:
 
 ### 🚀 Automated Publishing
+
 - **Push to main** → Automatic version bump & publish
 - **Version bumping** based on commit message conventions
 - **Automatic releases** with changelog generation
 
 ### 📝 Commit Convention
+
 Use conventional commit messages for automatic versioning:
 
 ```bash
