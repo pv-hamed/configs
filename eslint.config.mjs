@@ -2,7 +2,7 @@ import { defineConfig } from './src/index.mjs';
 
 export default defineConfig(
   {
-    ignores: ['cjs/'],
+    ignores: ['dist/'],
     test: true,
     esm: true,
     node: true,

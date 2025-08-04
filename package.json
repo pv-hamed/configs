@@ -35,12 +35,12 @@
     "postpublish": "pinst --enable",
     "pre-commit": "npm run test && lint-staged && npm run spell"
   },
-  "main": "./cjs/index.js",
+  "main": "./dist/index.js",
   "module": "./src/index.mjs",
   "exports": {
     ".": {
       "import": "./src/index.mjs",
-      "require": "./cjs/index.js",
+      "require": "./dist/index.js",
       "types": "./src/index.d.ts"
     }
   },
