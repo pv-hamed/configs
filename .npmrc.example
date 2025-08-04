@@ -1,5 +1,0 @@
-save-exact=true
-update-notifier=false
-legacy-peer-deps=true
-@jix:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
