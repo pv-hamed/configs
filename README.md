@@ -4,143 +4,222 @@
 
 <br/>
 
-![download status][download-badge]
-![version][version-badge]
-![MIT License][license-badge]
-
 </div>
-# @jix/configs
-
-A comprehensive ESLint configuration for CoinSigma React applications using ESLint v9 flat config.
-
-## Features
-
-- ✅ ESLint v9 with flat config format
-- ⚛️ React and React Hooks support
-- 🔷 TypeScript support
-- ♿ Accessibility rules (jsx-a11y)
-- 📦 Import/export organization
-- 🎨 Compatible with shadcn/ui components
-- 🚀 Modern JavaScript/TypeScript features
-
 ## Installation
 
-```bash
-pnpm add -D @jix/configs eslint
+```sh
+npm install --save-dev @pv-hamed/configs eslint prettier
 ```
+
+⚡️ That's it, you don't need to install any eslint-plugin! If you already have some plugins installed, please remove them.
 
 ## Usage
 
-Create an `eslint.config.js` file in your project root:
+To use the configuration, all you need is to export the generated config by the `defineConfig` function. It automatically enables required
+plugins with **Auto Module Detection**.
 
-```javascript
-import coinSigmaConfig from "@jix/configs";
+### ESM
 
-export default coinSigmaConfig;
-```
+```js
+import { defineConfig } from '@pv-hamed/configs';
 
-### With custom overrides
-
-```javascript
-import coinSigmaConfig from "@jix/configs";
-
-export default [
-  ...coinSigmaConfig,
-  {
-    // Your custom rules
-    rules: {
-      "no-console": "off",
-    },
+export default defineConfig({
+  typescript: {
+    tsconfigRootDir: import.meta.dirname, // If you are using TypeScript
   },
-];
+});
 ```
 
-### For specific file patterns
+### CJS
 
-```javascript
-import coinSigmaConfig from "@jix/configs";
+```js
+const { defineConfig } = require('@pv-hamed/configs');
 
-export default [
-  ...coinSigmaConfig,
-  {
-    files: ["src/components/**/*.tsx"],
-    rules: {
-      // Component-specific rules
-    },
-  },
-];
+module.exports = defineConfig({
+  tsconfigRootDir: import.meta.dirname, // If you are using TypeScript
+});
 ```
 
-## What's included
+## How Module Detection Works
 
-### Base configurations
+Automatic module detection enables ESLint plugins based on the dependencies listed in your `package.json`. It scans your project to identify
+which tools you're using, and then activates the corresponding ESLint plugins accordingly.
 
-- ESLint recommended rules
-- React recommended rules
-- React Hooks rules
-- TypeScript recommended rules
-- JSX Accessibility rules
-- Import/export organization rules
+For example, if your `package.json` includes `vitest` as a dependency, the configuration will automatically enable `eslint-plugin-vitest`
+for you. (You don't need to install the plugin itself)
 
-### Key rules
+### Modules API
 
-- **React**: Modern React patterns (no React import needed)
-- **TypeScript**: Strict type checking with sensible defaults
-- **Accessibility**: WCAG compliance helpers
-- **Import organization**: Automatic import sorting and grouping
-- **Code quality**: Consistent code style and best practices
+You can fine-tune module detection by overriding it, the `defineConfig` function accepts options as its first argument to control enabled
+modules.
 
-## Supported file types
-
-- `.js`, `.jsx` - JavaScript and JSX files
-- `.ts`, `.tsx` - TypeScript and TSX files
-- `.mjs`, `.cjs` - ES modules and CommonJS
-
-## VS Code integration
-
-For the best experience, install the ESLint extension and add this to your VS Code settings:
-
-```json
-{
-  "eslint.experimental.useFlatConfig": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
+```typescript
+interface Options {
+  react?: boolean; // controls react, react-hooks, jsx/a11y plugins
+  typescript?: ParserOptions; // https://typescript-eslint.io/packages/parser#configuration
+  node?: boolean; // controls node plugin
+  sort?: boolean; // controls perfectionist plugin
+  strict?: boolean; // controls strict rules
+  import?: { internalRegExp?: string; lifetime?: number }; // controls import plugin
+  esm?: boolean; // controls esm plugin
+  test?: boolean; // controls test formatting plugin
+  jest?: boolean; // controls jest plugin
+  vitest?: boolean; // controls vitest plugin
+  cypress?: boolean; // controls cypress plugin
+  playwright?: boolean; // controls playwright plugin
+  storybook?: boolean; // controls storybook plugin
+  tailwind?: false | TailwindConfig; // controls tailwindcss plugin
+  next?: boolean; // controls next plugin
+  prettier?: boolean; // controls prettier plugin
+  disableExpensiveRules?: boolean; // controls expensive rules
+  gitignore?: false | string; // automatically ignore paths from .gitignore
+  regex?: boolean | { allowedCharacterRanges?: string[] }; // controls regexp plugin
 }
 ```
 
-## Development Workflow
+## What if I want to add my one rules
 
-This package uses automated CI/CD for releases:
+You can pass any number of arbitrary custom config overrides to `defineConfig` function:
 
-### 🚀 Automated Publishing
+```js
+import { defineConfig } from '@pv-hamed/configs';
 
-- **Push to main** → Automatic version bump & publish
-- **Version bumping** based on commit message conventions
-- **Automatic releases** with changelog generation
-
-### 📝 Commit Convention
-
-Use conventional commit messages for automatic versioning:
-
-```bash
-# Major version (breaking changes)
-git commit -m "feat!: restructure config exports"
-
-# Minor version (new features)
-git commit -m "feat: add new accessibility rules"
-
-# Patch version (fixes & improvements)
-git commit -m "fix: resolve TypeScript compilation issue"
+export default defineConfig(
+  {
+    typescript: true,
+    // You can pass extends here
+    rules: {
+      'no-console': 'error',
+    },
+  },
+  // And any number of extra configurations
+  {
+    files: ['**/*.ts'],
+    rules: {},
+  },
+  {
+    rules: {},
+  },
+);
 ```
 
-See [Commit Convention Guide](.github/COMMIT_CONVENTION.md) for details.
+## What If I Want to Use a Plugin That Isn't Supported?
 
-## Contributing
+You can still use any ESLint plugin, even if it's not supported by automatic detection. Simply install the plugin manually and add it to the
+`defineConfig`. There are no limitations.
 
-This package is maintained by the Jix team. For issues or feature requests, please open an issue in the repository.
+```js
+import { defineConfig } from '@pv-hamed/configs';
+import pluginVue from 'eslint-plugin-vue';
 
-## License
+export default defineConfig(
+  {
+    /* Options */
+  },
+  ...pluginVue.configs['flat/recommended'],
+);
+```
 
-MIT
-Reusable configs
+## Tailwind
+
+To enable Tailwind CSS in your project, specify the path to your CSS file in the module configuration:
+
+Tailwind 4:
+
+```typescript
+export default defineConfig({
+  tailwind: { entryPoint: './src/global.css' },
+});
+```
+
+Tailwind 3:
+
+```typescript
+export default defineConfig({
+  tailwind: { tailwindConfig: './tailwind.config.js' },
+});
+```
+
+## GitIgnore
+
+By default, configs checks for a `.gitignore` file at the root of the project. If the file exists, it will be used automatically. You can
+override this behavior by updating the configuration.
+
+```typescript
+export default defineConfig({
+  gitignore: './packages/acme/.gitignore', // use `false` to disable
+});
+```
+
+## I'm Getting a Next.js Warning: Plugin Was Not Detected
+
+This configuration includes built-in support for [Next.js](https://nextjs.org). The warning you're seeing from Next.js is misleading—it
+simply checks whether the plugin is explicitly listed in your package.json.
+
+You can safely ignore this warning. Alternatively, you can update your lint script from next lint to eslint to avoid it entirely.
+
+## Speed Optimization!
+
+Balancing the benefits of linting rules against their performance impact is crucial. Below is a table highlighting the most
+resource-intensive linting rules encountered in a real-world React project:
+
+| Rule                                   | Time (ms) | Relative |
+| -------------------------------------- | --------- | -------- |
+| prettier/prettier                      | 3299.631  | 19.2%    |
+| @typescript-eslint/no-misused-promises | 2473.767  | 14.4%    |
+| import/no-cycle                        | 1177.111  | 6.8%     |
+| import/namespace                       | 1148.731  | 6.7%     |
+
+As illustrated, certain rules significantly increase linting time, potentially hindering the developer experience by slowing down the
+feedback loop. To mitigate this, you may consider disabling these resource-intensive rules in the development environment. However, they can
+remain active in environments where performance is less critical, such as Continuous Integration (CI) systems or during pre-commit checks
+(git hooks).
+
+To conditionally disable expensive linting rules, you can modify your configuration as follows:
+
+List of `expensiveRules` to be affected:
+
+```sh
+@typescript-eslint/no-floating-promises
+@typescript-eslint/no-misused-promises
+import/default # (disabled in TS env)
+import/export # (disabled in TS env)
+import/named # (disabled in TS env)
+import/no-named-as-default-member # (disabled in TS env)
+import/namespace
+import/no-cycle
+import/no-deprecated
+```
+
+```js
+export default defineConfig({
+  disableExpensiveRules: !process.env.CI || !process.env.HUSKY // Or anywhere you want
+  prettier: false // So you should run the formatter explicitly.
+});
+```
+
+## Migration Guide
+
+[See Migration Guide](./MIGRATION.md)
+
+## What's included?
+
+- [@eslint-react/eslint-plugin](https://eslint-react.xyz/)
+- [@next/eslint-plugin-next](https://nextjs.org/docs/basic-features/eslint#eslint-plugin)
+- [@stylistic/eslint-plugin](https://eslint.style/packages/default)
+- [eslint-plugin-cypress](https://github.com/cypress-io/eslint-plugin-cypress)
+- [eslint-plugin-import-x](https://github.com/un-ts/eslint-plugin-import-x)
+- [eslint-plugin-jest](https://github.com/jest-community/eslint-plugin-jest)
+- [eslint-plugin-jest-formatting](https://github.com/dangreenisrael/eslint-plugin-jest-formatting)
+- [eslint-plugin-jsx-a11y](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y)
+- [eslint-plugin-n](https://github.com/eslint-community/eslint-plugin-n)
+- [eslint-plugin-perfectionist](https://perfectionist.dev/)
+- [eslint-plugin-playwright](https://github.com/playwright-community/eslint-plugin-playwright)
+- [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier)
+- [eslint-plugin-promise](https://github.com/eslint-community/eslint-plugin-promise)
+- [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks)
+- [eslint-plugin-storybook](https://github.com/storybookjs/eslint-plugin-storybook#readme)
+- [eslint-plugin-better-tailwindcss](https://github.com/schoero/eslint-plugin-better-tailwindcss)
+- [eslint-plugin-vitest](https://www.npmjs.com/package/eslint-plugin-vitest)
+- [typescript-eslint](https://typescript-eslint.io/)
+- [eslint-plugin-regexp](https://www.npmjs.com/package/eslint-plugin-regexp)
