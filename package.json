@@ -1,6 +1,6 @@
 {
   "name": "@pv-hamed/configs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reusable ESLint configuration for Pointsville React applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
