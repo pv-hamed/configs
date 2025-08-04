@@ -1,5 +1,5 @@
 {
-  "name": "@jix/configs",
+  "name": "@pv-hamed/configs",
   "version": "1.0.0",
   "description": "Reusable ESLint configuration for Pointsville React applications",
   "main": "dist/index.js",
