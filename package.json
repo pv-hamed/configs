@@ -4,7 +4,6 @@
   "license": "MIT",
   "author": "Hamed Jafari <hamedjix@gmail.com>",
   "description": "Pointsville's ESLint configuration",
-  "types": "dist/index.d.ts",
   "type": "module",
   "files": [
     "src",
