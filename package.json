@@ -1,0 +1,51 @@
+{
+  "name": "@jix/configs",
+  "version": "1.0.0",
+  "description": "Reusable ESLint configuration for Pointsville React applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "pnpm run build"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-config",
+    "react",
+    "javascript",
+    "typescript",
+    "flat-config"
+  ],
+  "author": "Hamed Jafari",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pv-hamed/configs.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.32.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^15.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.9",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2"
+  }
+}
