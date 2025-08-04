@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 shopt -s globstar
 
-find "./cjs" -type f -name "*.js" | while read -r file; do
+find "./dist" -type f -name "*.js" | while read -r file; do
   content=$(cat "$file")
   updated_content=$(echo "$content" | sed 's/require("\(.*\)\.mjs"/require("\1\.js"/g')
   echo "$updated_content" >"$file"

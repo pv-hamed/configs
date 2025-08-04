@@ -7,7 +7,7 @@
   "type": "module",
   "files": [
     "src",
-    "cjs"
+    "dist"
   ],
   "keywords": [
     "pointsville",
