@@ -4,7 +4,25 @@
 
 <br/>
 
+[![npm version](https://badge.fury.io/js/%40pv-hamed%2Fconfigs.svg)](https://badge.fury.io/js/%40pv-hamed%2Fconfigs)
+[![CI/CD](https://github.com/pv-hamed/configs/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/pv-hamed/configs/actions/workflows/ci-cd.yml)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+
 </div>
+
+# @pv-hamed/configs
+
+A comprehensive ESLint configuration package with automatic module detection and semantic versioning.
+
+## Features
+
+- 🚀 **Automatic Module Detection** - Enables plugins based on your `package.json` dependencies
+- 📦 **Zero Configuration** - Works out of the box with sensible defaults
+- 🔧 **Highly Customizable** - Override any rule or configuration
+- 🎯 **Performance Optimized** - Optional expensive rules for better development experience
+- 📋 **Semantic Versioning** - Automated releases with conventional commits
+- 🔒 **Private Package Support** - Published to GitHub Packages
+
 ## Installation
 
 ```sh
@@ -198,9 +216,35 @@ export default defineConfig({
 });
 ```
 
+## Contributing
+
+This package uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning and publishing. Please follow [Conventional Commits](https://www.conventionalcommits.org/) specification when making commits:
+
+- `feat:` - New features (minor version bump)
+- `fix:` - Bug fixes (patch version bump)
+- `BREAKING CHANGE:` - Breaking changes (major version bump)
+- `docs:` - Documentation updates
+- `chore:` - Maintenance tasks
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes following conventional commits
+4. Submit a pull request
+5. Once merged, semantic-release will automatically:
+   - Analyze commits
+   - Generate changelog
+   - Create GitHub release
+   - Publish to GitHub Packages
+
 ## Migration Guide
 
 [See Migration Guide](./MIGRATION.md)
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for a detailed history of changes. The changelog is automatically generated using semantic-release.
 
 ## What's included?
 
